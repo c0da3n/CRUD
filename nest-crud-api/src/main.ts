@@ -5,7 +5,12 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: 'http://localhost:8080',
+      credentials: true,
+    },
+  });
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT', 3000);
   const NODE_ENV = config.get<string>('NODE_ENV', 'production');
