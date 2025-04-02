@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import swagger from './swagger';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -11,8 +11,10 @@ async function bootstrap() {
       credentials: true,
     },
   });
+  app.useGlobalPipes(new ValidationPipe());
   const config = app.get(ConfigService);
   const port = config.get<number>('PORT', 3000);
+
   const NODE_ENV = config.get<string>('NODE_ENV', 'production');
 
   if (NODE_ENV === 'development') {
