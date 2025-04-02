@@ -8,9 +8,9 @@ import {
   Put,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
-import { TodoDto } from './dto/todo.dto';
-import { UpdateDto } from './dto/update.dto';
 import { ApiOperation } from '@nestjs/swagger';
+import { CreateTodoDto } from './dto/createTodo.dto';
+import { UpdateTodoDto } from './dto/updateTodo.dto';
 
 @Controller('todo')
 export class TodoController {
@@ -21,8 +21,8 @@ export class TodoController {
     summary: '할 일 생성',
     description: '새로운 할 일을 추가합니다.',
   })
-  async createTodo(@Body() todoDto: TodoDto) {
-    return await this.todoService.createTodo(todoDto);
+  async createTodo(@Body() createTodoDto: CreateTodoDto) {
+    return await this.todoService.createTodo(createTodoDto);
   }
 
   @Get()
@@ -41,9 +41,9 @@ export class TodoController {
   })
   async updateTodo(
     @Param('todoId') todoId: string,
-    @Body() updateDto: UpdateDto,
+    @Body() updateTodoDto: UpdateTodoDto,
   ) {
-    return await this.todoService.updateTodo(todoId, updateDto);
+    return await this.todoService.updateTodo(todoId, updateTodoDto);
   }
 
   @Delete(':todoId')

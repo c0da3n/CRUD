@@ -1,9 +1,9 @@
+import { UpdateTodoDto } from './dto/updateTodo.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Todo } from './entities/todo.entities';
-import { TodoDto } from './dto/todo.dto';
-import { UpdateDto } from './dto/update.dto';
+import { CreateTodoDto } from './dto/createTodo.dto';
 
 @Injectable()
 export class TodoService {
@@ -12,15 +12,15 @@ export class TodoService {
     private readonly todoRepository: Repository<Todo>,
   ) {}
 
-  async createTodo(todoDto: TodoDto) {
-    return await this.todoRepository.save(todoDto);
+  async createTodo(createTodoDto: CreateTodoDto) {
+    return await this.todoRepository.save(createTodoDto);
   }
 
   async readTodo() {
     return await this.todoRepository.find();
   }
 
-  async updateTodo(todoId: string, updateDto: UpdateDto) {
+  async updateTodo(todoId: string, updateTodoDto: UpdateTodoDto) {
     const todo = await this.todoRepository.findOne({
       where: { id: todoId },
     });
@@ -29,15 +29,15 @@ export class TodoService {
       throw new Error('Todo not found');
     }
 
-    if (!updateDto.title && !updateDto.desc) {
+    if (!updateTodoDto.title && !updateTodoDto.desc) {
       throw new HttpException(
         '최소 하나의 값이 필요합니다',
         HttpStatus.FORBIDDEN,
       );
     }
 
-    todo.title = updateDto.title ?? todo.title;
-    todo.desc = updateDto.desc ?? todo.desc;
+    todo.title = updateTodoDto.title ?? todo.title;
+    todo.desc = updateTodoDto.desc ?? todo.desc;
 
     return await this.todoRepository.save(todo);
   }
